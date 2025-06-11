@@ -21,5 +21,6 @@ from snapapp import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',views.index,name='index'),
-    path('camera', views.camera, name = 'camera view')
+    path('camera', views.camera, name = 'camera view'),
+    path("signup/", views.SignUpView.as_view(), name="signup"),
 ]

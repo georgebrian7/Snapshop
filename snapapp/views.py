@@ -10,6 +10,9 @@ from django.core.files.base import ContentFile
 from django.core.files.temp import NamedTemporaryFile
 from urllib.request import urlopen
 from django.core.files.storage import default_storage
+from django.contrib.auth.forms import UserCreationForm
+from django.urls import reverse_lazy
+from django.views.generic import CreateView
 # Create your views here.
 def index(request):
     return render(request,'index.html')
@@ -30,3 +33,8 @@ def camera(request):
         default_storage.save('C:/Users/George Brian/repos/Snapshop/snapshop/media/a.jpg', ContentFile(urlopen(image_path).read()))
         return HttpResponse('Done!')
     return render(request, 'index.html')
+
+class SignUpView(CreateView):
+    form_class = UserCreationForm
+    success_url = reverse_lazy("login")
+    template_name = "registration/signup.html"
