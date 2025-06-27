@@ -8,32 +8,14 @@
         <script type="module" src="{% static 'js/index.js' %}"></script>
     </head>
     <body>
+        <h1 class="title">
+  SNAPSHOP 
+  <img src="{% static '/images/new.png' %}" alt="Logo" class="logo">
+</h1>
         <div class="container">
-  <ul class="nav bg-info">
-    <li class="nav-item">
-      <a class="nav-link link-light" href="/">HOME</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link link-light" href="/members">MEMBERS</a>
-    </li>
-  </ul>
-        <div class="container text-center">
-            <div class="row">
-                <div class="column">
-                    3
-                </div>
-                <div class="column">
-                    6
-                </div>
-            </div>
-            <div class="row">
-                <div class="column">
-                    2
-                </div>
-            </div>
-</div>
-        <div class="contentarea">
-            <div class="top">SNAPSHOP</div>
+
+        <div class="content-area">
+            
             <div class="Input">
                 <form method="POST" name="inputForm" enctype='multipart/form-data'>
                     {% csrf_token %}
@@ -51,12 +33,13 @@
                     </div>
                     <br>
                     <div class="controls">
-                        <button id="startbutton" type="button">Take photo</button>
-                        <button type="submit" class="button" id="submit">Scan Product</button>
+                        <button id="startbutton" type="button"><img src="{% static 'images/camera.png'%}" alt=""></button>
+                        <button type="submit" class="button" id="submit"><img src="{% static 'images/inspect.png'%}" alt="">\ </button>
                     </div>
                     
                 </form>
             </div>
+            
         </div>
     </body>
     {% endblock %}

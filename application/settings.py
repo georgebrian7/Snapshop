@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 import os
 from pathlib import Path
-
+from dotenv import load_dotenv
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -41,8 +41,15 @@ INSTALLED_APPS = [
     'snapapp',
     'sslserver',
     'accounts',
+    "crispy_forms",
+    "crispy_bootstrap5",
+    'rest_framework',
     
 ]
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+
+CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -132,3 +139,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = "index"
 LOGOUT_REDIRECT_URL = "/"
+
+
+load_dotenv()
+
+GROQ_API_KEY = os.getenv('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')
+TOGETHER_API_KEY = os.getenv('b915e0d0408e9d2aabd86f849c7f7bd6976779d4d3e207ce28978ef960165c98')

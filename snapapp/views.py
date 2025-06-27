@@ -13,9 +13,20 @@ from django.core.files.storage import default_storage
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .llama_utils import llama_scout_poem, llama_maverick_describe
+
+
+
+
+
 # Create your views here.
 def index(request):
     return render(request,'index.html')
+
+def welcome(request):
+    return render(request,'welcome.html')
 
 def camera(request):
     if request.method == 'POST':
@@ -34,3 +45,16 @@ def camera(request):
         return HttpResponse('Done!')
     return render(request, 'index.html')
 
+@api_view(['POST'])
+def scout_poem(request):
+    prompt = request.data.get('prompt', 'Write a short poem about AI.')
+    poem = llama_scout_poem(prompt)
+    return Response({"poem": poem})
+
+@api_view(['POST'])
+def maverick_describe(request):
+    image_url = request.data.get('image_url')
+    if not image_url:
+        return Response({"detail": "image_url is required"}, status=400)
+    desc = llama_maverick_describe(image_url)
+    return Response({"description": desc})

@@ -21,6 +21,7 @@
   display: flex;
   justify-content: center;
   gap: 20px;
+  background-color: inherit;
 }
 
 #photo {
@@ -58,14 +59,40 @@
   display:inline-block;
 }
 
-button {
-  background-color: rgba(255, 255, 255, 0.7);
-  border: none;
-  padding: 10px 20px;
-  font-size: 16px;
-  border-radius: 5px;
-  cursor: pointer;
+
+ body .top {
+  font-family: "Playfair Display", serif;
+  font-optical-sizing: auto;
+  color: #06f00a;
+
 }
-button:hover {
-  background-color: rgba(255, 255, 255, 0.9);
+h1 {
+  
+  color: #fb7334;
+}
+img {
+  background-color: inherit;
+}
+.content-area {
+  display: flex;
+  gap: 20px; /* Optional spacing between Input and items */
+}
+
+.Input, .items {
+  flex: 1; /* Each takes equal space */
+}
+.title {
+  display: flex;
+  align-items: center;
+  font-size: 2.5rem;
+  gap: 0.5rem; /* space between text and logo */
+}
+
+.logo {
+  height: 30px; /* Adjust as needed */
+  width: auto;
+}
+button {
+  background-color: inherit;
+  border: none;
 }

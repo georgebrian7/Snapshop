@@ -20,7 +20,10 @@ from snapapp import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',views.index,name='index'),
+    path('',views.welcome, name = 'welcome'),
+    path('index',views.index,name='index'),
     path('camera', views.camera, name = 'camera view'),
+    path('scout/', views.scout_poem, name='scout_poem'),
+    path('maverick/', views.maverick_describe, name='maverick_describe'),
     
 ]

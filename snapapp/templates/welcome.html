@@ -1,0 +1,21 @@
+    {% block content %}
+    {% load static %}
+    <head>
+        <link rel="stylesheet" href="https://bootswatch.com/5/litera/bootstrap.min.css">
+        <link rel="stylesheet" href="{% static 'css/home.css' %}" type="text/css" media="all">
+    </head>
+<body style="background-image: url('{% static '/images/background.jpg' %}'); background-size: cover;">
+    <div class="welcome-container">
+        <h1 class="title">
+  SNAPSHOP 
+  <img src="{% static '/images/new.png' %}" alt="Logo" class="logo">
+</h1>
+    <p class="lead">Purchase goods in 3 easy steps Take a picture
+    Scan
+    Buy</p>
+    
+    <a href="{% url 'signup' %}"><button type="button" class="btn btn-primary" fdprocessedid="0uwvd5" >Sign Up</button></a>
+        <p >Already have an account <a href="{% url 'login' %}"><button type="button" class="btn btn-light" fdprocessedid="3ecplm" >Log In</button></a></p>
+    
+</body>
+ {% endblock %}
