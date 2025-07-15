@@ -25,5 +25,6 @@ urlpatterns = [
     path('camera', views.camera, name = 'camera view'),
     path('scout/', views.scout_poem, name='scout_poem'),
     path('maverick/', views.maverick_describe, name='maverick_describe'),
+    path('product',views.product,name='product'),
     
 ]

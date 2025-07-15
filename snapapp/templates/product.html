@@ -1,0 +1,284 @@
+{% block content %}
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - Your Store</title>
+    <link rel="stylesheet" href="{% static 'css/product.css' %}" type="text/css" media="all">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">Your Store</a>
+            <ul class="nav-links">
+                <li><a href="#products">Products</a></li>
+                <li><a href="#categories">Categories</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="#cart">Cart (0)</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Search and Filter Section -->
+    <div class="search-section">
+        <div class="search-container">
+            <form class="search-form" onsubmit="return false;">
+                <input 
+                    type="text" 
+                    id="searchInput"
+                    placeholder="Search products..." 
+                    class="search-input"
+                    oninput="filterProducts()"
+                >
+                <select id="categoryFilter" class="filter-select" onchange="filterProducts()">
+                    <option value="">All Categories</option>
+                    <option value="electronics">Electronics</option>
+                    <option value="clothing">Clothing</option>
+                    <option value="books">Books</option>
+                    <option value="home">Home & Garden</option>
+                    <option value="sports">Sports</option>
+                </select>
+                <button type="button" class="btn btn-primary" onclick="filterProducts()">Search</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Products Section -->
+    <div class="products-section" id="products">
+        <h1 class="section-title">Our Products</h1>
+        
+        <div class="products-grid" id="productsGrid">
+            <!-- Product 1 -->
+            <div class="product-card" data-category="electronics" data-name="wireless bluetooth headphones premium sound quality">
+                <div class="discount-badge">-25%</div>
+                <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=300&fit=crop" alt="Wireless Headphones" class="product-image">
+                <div class="product-info">
+                    <div class="product-category">Electronics</div>
+                    <h3 class="product-title">Wireless Bluetooth Headphones</h3>
+                    <p class="product-description">Premium sound quality with noise cancellation and 30-hour battery life</p>
+                    <div class="product-price">
+                        <span class="current-price">$149.99</span>
+                        <span class="original-price">$199.99</span>
+                    </div>
+                    <div class="stock-status in-stock">✓ In Stock (15 available)</div>
+                    <div class="product-actions">
+                        <button class="btn btn-outline" onclick="viewProduct(1)">View Details</button>
+                        <button class="btn btn-primary" onclick="addToCart(1)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 2 -->
+            <div class="product-card" data-category="clothing" data-name="cotton t-shirt comfortable casual wear">
+                <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=300&fit=crop" alt="Cotton T-Shirt" class="product-image">
+                <div class="product-info">
+                    <div class="product-category">Clothing</div>
+                    <h3 class="product-title">Premium Cotton T-Shirt</h3>
+                    <p class="product-description">Comfortable and breathable cotton t-shirt perfect for casual wear</p>
+                    <div class="product-price">
+                        <span class="current-price">$29.99</span>
+                    </div>
+                    <div class="stock-status in-stock">✓ In Stock (25 available)</div>
+                    <div class="product-actions">
+                        <button class="btn btn-outline" onclick="viewProduct(2)">View Details</button>
+                        <button class="btn btn-primary" onclick="addToCart(2)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 3 -->
+            <div class="product-card" data-category="books" data-name="javascript programming guide web development">
+                <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&h=300&fit=crop" alt="Programming Book" class="product-image">
+                <div class="product-info">
+                    <div class="product-category">Books</div>
+                    <h3 class="product-title">JavaScript Programming Guide</h3>
+                    <p class="product-description">Complete guide to modern JavaScript and web development techniques</p>
+                    <div class="product-price">
+                        <span class="current-price">$45.99</span>
+                    </div>
+                    <div class="stock-status in-stock">✓ In Stock (8 available)</div>
+                    <div class="product-actions">
+                        <button class="btn btn-outline" onclick="viewProduct(3)">View Details</button>
+                        <button class="btn btn-primary" onclick="addToCart(3)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 4 -->
+            <div class="product-card" data-category="home" data-name="ceramic coffee mug kitchen dining">
+                <div class="discount-badge">-15%</div>
+                <img src="https://images.unsplash.com/photo-1514228742587-6b1558fcf93a?w=400&h=300&fit=crop" alt="Coffee Mug" class="product-image">
+                <div class="product-info">
+                    <div class="product-category">Home & Garden</div>
+                    <h3 class="product-title">Ceramic Coffee Mug Set</h3>
+                    <p class="product-description">Beautiful handcrafted ceramic mugs perfect for your morning coffee</p>
+                    <div class="product-price">
+                        <span class="current-price">$24.99</span>
+                        <span class="original-price">$29.99</span>
+                    </div>
+                    <div class="stock-status in-stock">✓ In Stock (12 available)</div>
+                    <div class="product-actions">
+                        <button class="btn btn-outline" onclick="viewProduct(4)">View Details</button>
+                        <button class="btn btn-primary" onclick="addToCart(4)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 5 -->
+            <div class="product-card" data-category="sports" data-name="yoga mat fitness exercise workout">
+                <img src="https://images.unsplash.com/photo-1506629905607-c44f2ab2d7b8?w=400&h=300&fit=crop" alt="Yoga Mat" class="product-image">
+                <div class="product-info">
+                    <div class="product-category">Sports</div>
+                    <h3 class="product-title">Premium Yoga Mat</h3>
+                    <p class="product-description">Non-slip yoga mat with extra cushioning for comfortable workouts</p>
+                    <div class="product-price">
+                        <span class="current-price">$39.99</span>
+                    </div>
+                    <div class="stock-status in-stock">✓ In Stock (20 available)</div>
+                    <div class="product-actions">
+                        <button class="btn btn-outline" onclick="viewProduct(5)">View Details</button>
+                        <button class="btn btn-primary" onclick="addToCart(5)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 6 -->
+            <div class="product-card" data-category="electronics" data-name="smartphone mobile phone android">
+                <div class="discount-badge">-30%</div>
+                <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=300&fit=crop" alt="Smartphone" class="product-image">
+                <div class="product-info">
+                    <div class="product-category">Electronics</div>
+                    <h3 class="product-title">Latest Smartphone</h3>
+                    <p class="product-description">High-performance smartphone with advanced camera and long battery life</p>
+                    <div class="product-price">
+                        <span class="current-price">$699.99</span>
+                        <span class="original-price">$999.99</span>
+                    </div>
+                    <div class="stock-status in-stock">✓ In Stock (5 available)</div>
+                    <div class="product-actions">
+                        <button class="btn btn-outline" onclick="viewProduct(6)">View Details</button>
+                        <button class="btn btn-primary" onclick="addToCart(6)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 7 -->
+            <div class="product-card" data-category="clothing" data-name="denim jeans casual pants">
+                <img src="https://images.unsplash.com/photo-1542272604-787c3835535d?w=400&h=300&fit=crop" alt="Denim Jeans" class="product-image">
+                <div class="product-info">
+                    <div class="product-category">Clothing</div>
+                    <h3 class="product-title">Classic Denim Jeans</h3>
+                    <p class="product-description">Comfortable fit denim jeans made from high-quality cotton blend</p>
+                    <div class="product-price">
+                        <span class="current-price">$79.99</span>
+                    </div>
+                    <div class="stock-status in-stock">✓ In Stock (18 available)</div>
+                    <div class="product-actions">
+                        <button class="btn btn-outline" onclick="viewProduct(7)">View Details</button>
+                        <button class="btn btn-primary" onclick="addToCart(7)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 8 -->
+            <div class="product-card" data-category="home" data-name="plant pot indoor garden decoration">
+                <img src="https://images.unsplash.com/photo-1485955900006-10f4d324d411?w=400&h=300&fit=crop" alt="Plant Pot" class="product-image">
+                <div class="product-info">
+                    <div class="product-category">Home & Garden</div>
+                    <h3 class="product-title">Modern Plant Pot</h3>
+                    <p class="product-description">Stylish ceramic plant pot perfect for indoor plants and home decoration</p>
+                    <div class="product-price">
+                        <span class="current-price">$34.99</span>
+                    </div>
+                    <div class="stock-status out-of-stock">✗ Out of Stock</div>
+                    <div class="product-actions">
+                        <button class="btn btn-outline" onclick="viewProduct(8)">View Details</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- No Results Message -->
+        <div id="noResults" class="no-products" style="display: none;">
+            <h3>No products found</h3>
+            <p>Try adjusting your search criteria or browse all products.</p>
+            <button class="btn btn-primary" onclick="clearFilters()">View All Products</button>
+        </div>
+    </div>
+
+    <script>
+        let cart = [];
+
+        function filterProducts() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const categoryFilter = document.getElementById('categoryFilter').value;
+            const productCards = document.querySelectorAll('.product-card');
+            const noResults = document.getElementById('noResults');
+            let visibleCount = 0;
+
+            productCards.forEach(card => {
+                const productName = card.getAttribute('data-name');
+                const productCategory = card.getAttribute('data-category');
+                
+                const matchesSearch = productName.includes(searchTerm);
+                const matchesCategory = categoryFilter === '' || productCategory === categoryFilter;
+                
+                if (matchesSearch && matchesCategory) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+        }
+
+        function clearFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('categoryFilter').value = '';
+            filterProducts();
+        }
+
+        function addToCart(productId) {
+            cart.push(productId);
+            updateCartDisplay();
+            
+            // Show success message
+            const button = event.target;
+            const originalText = button.textContent;
+            button.textContent = 'Added!';
+            button.style.background = '#27ae60';
+            
+            setTimeout(() => {
+                button.textContent = originalText;
+                button.style.background = '';
+            }, 1000);
+        }
+
+        function updateCartDisplay() {
+            const cartLink = document.querySelector('.nav-links a[href="#cart"]');
+            cartLink.textContent = `Cart (${cart.length})`;
+        }
+
+        function viewProduct(productId) {
+            alert(`Viewing product ${productId}. In a real application, this would navigate to a product detail page.`);
+        }
+
+        // Add smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+{% endblock %}

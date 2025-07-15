@@ -27,7 +27,8 @@ def index(request):
 
 def welcome(request):
     return render(request,'welcome.html')
-
+def product(request):
+    return render(request,'product.html')
 def camera(request):
     if request.method == 'POST':
         image_path = request.POST["src"]
@@ -41,7 +42,7 @@ def camera(request):
         image.name = name
         with open('image.txt', 'w+') as file:
             file.write(str(name))
-        default_storage.save('C:/Users/George Brian/repos/Snapshop/snapshop/media/a.jpg', ContentFile(urlopen(image_path).read()))
+        default_storage.save('C:/Users/George Brian/repos/SNAPSHOP/snapapp/static/images/a.jpg', ContentFile(urlopen(image_path).read()))
         return HttpResponse('Done!')
     return render(request, 'index.html')
 

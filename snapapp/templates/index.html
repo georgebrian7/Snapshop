@@ -34,7 +34,9 @@
                     <br>
                     <div class="controls">
                         <button id="startbutton" type="button"><img src="{% static 'images/camera.png'%}" alt=""></button>
-                        <button type="submit" class="button" id="submit"><img src="{% static 'images/inspect.png'%}" alt="">\ </button>
+                        <a href="{% url 'product' %}" class="button">
+                        <img src="{% static 'images/inspect.png' %}" alt="">
+                        </a>
                     </div>
                     
                 </form>

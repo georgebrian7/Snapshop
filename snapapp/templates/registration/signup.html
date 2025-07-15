@@ -5,9 +5,9 @@
 {% block content %}
 {% load static %}
 <head>
-        <link rel="stylesheet" href="https://bootswatch.com/5/litera/bootstrap.min.css">
-        <link rel="stylesheet" href="{% static 'css/signup.css' %}" type="text/css" media="all">
-    </head>
+    <link rel="stylesheet" href="https://bootswatch.com/5/litera/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/signup.css' %}" type="text/css" media="all">
+</head>
 <div class="signup-background">
   <img src="{% static '/images/signup.jpg' %}" alt="Background" class="background-image">
 </div>
@@ -20,7 +20,6 @@
       {{ form|crispy }}
       <button type="submit">Sign Up</button>
     </form>
-    
   </div>
 </div>
 {% endblock %}
