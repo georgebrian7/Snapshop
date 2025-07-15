@@ -144,11 +144,5 @@ LOGOUT_REDIRECT_URL = "/"
 
 load_dotenv()
 
-# TOGETHER_API_KEY=os.getenv("tgp_v1_giAjefU95FSy10-m9KHf-e8h932XOabFImlP9wD7Jmk")
-# GROQ_API_KEY=os.getenv("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")
-DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 
-# TOGETHER_API_KEY = os.getenv('b915e0d0408e9d2aabd86f849c7f7bd6976779d4d3e207ce28978ef960165c98')
 
-# if not TOGETHER_API_KEY:
-#     raise ValueError("TOGETHER_API_KEY is required in environment variables")
