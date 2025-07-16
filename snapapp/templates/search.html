@@ -1,0 +1,91 @@
+{% load static %}
+
+{% block content %}
+<head>
+        <link rel="stylesheet" href="{% static 'css/search.css' %}" type="text/css" media="all">
+</head>
+<body>
+    <div class="container">
+        <!-- Search Form -->
+        <div class="search-form-container">
+            <form method="GET" class="search-form">
+                <div class="search-input-container">
+                    <input 
+                        type="text" 
+                        name="q" 
+                        value="{{ query }}" 
+                        placeholder="Search products..." 
+                        class="search-input"
+                    >
+                </div>
+                <div class="category-select-container">
+                    <select name="category" class="category-select">
+                        <option value="">All Categories</option>
+                        {% for cat in categories %}
+                            <option value="{{ cat.id }}" {% if cat.id == category %}selected{% endif %}>
+                                {{ cat.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="search-button">
+                    Search
+                </button>
+            </form>
+        </div>
+
+        <!-- Results -->
+        {% if query %}
+            <div class="results-header">
+                <h2 class="results-title">Search Results for "{{ query }}" ({{ total_items }} items)</h2>
+            </div>
+            
+            <div class="items-grid">
+                {% for item in items %}
+                    <div class="item-card">
+                        <img src="{{ item.image_url }}" alt="{{ item.title }}" class="item-image">
+                        <div class="item-details">
+                            <h3 class="item-title">{{ item.title }}</h3>
+                            <p class="item-price">
+                                {{ item.price }} {{ item.currency }}
+                            </p>
+                            <p class="item-condition">Condition: {{ item.condition }}</p>
+                            <p class="item-seller">Seller: {{ item.seller_username }}</p>
+                            <a href="{{ item.item_url }}" 
+                               target="_blank" 
+                               class="view-button">
+                                View on eBay
+                            </a>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="no-results">
+                        <p class="no-results-text">No items found. Try a different search term.</p>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            {% if items.has_other_pages %}
+                <div class="pagination-container">
+                    <nav class="pagination-nav">
+                        {% if items.has_previous %}
+                            <a href="?q={{ query }}&category={{ category }}&page={{ items.previous_page_number }}" 
+                               class="pagination-link">Previous</a>
+                        {% endif %}
+                        
+                        <span class="pagination-current">
+                            Page {{ items.number }} of {{ items.paginator.num_pages }}
+                        </span>
+                        
+                        {% if items.has_next %}
+                            <a href="?q={{ query }}&category={{ category }}&page={{ items.next_page_number }}" 
+                               class="pagination-link">Next</a>
+                        {% endif %}
+                    </nav>
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+</body>
+{% endblock %}

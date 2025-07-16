@@ -1,8 +1,6 @@
-from django.shortcuts import render,redirect
-from django.shortcuts import render
-from django.http import HttpResponse
+from django.shortcuts import render, redirect
+from django.http import HttpResponse, JsonResponse
 from django.core.files.storage import FileSystemStorage
-# from corona.analyzer import main
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from django.core.files import File
@@ -13,22 +11,33 @@ from django.core.files.storage import default_storage
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .llama_utils import llama_scout_poem, llama_maverick_describe
-
-
-
+from django.core.paginator import Paginator
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import ListView
+from django.utils.decorators import method_decorator
+from services.ebay_service import EbayService
+from .models import EbayItem, SearchHistory, UserFavorite
+import json
+from django.utils import timezone
 
 
 # Create your views here.
 def index(request):
-    return render(request,'index.html')
+    return render(request, 'index.html')
 
 def welcome(request):
-    return render(request,'welcome.html')
+    return render(request, 'welcome.html')
+
 def product(request):
-    return render(request,'product.html')
+    return render(request, 'product.html')
+
+@login_required
 def camera(request):
     if request.method == 'POST':
         image_path = request.POST["src"]
@@ -47,15 +56,228 @@ def camera(request):
     return render(request, 'index.html')
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def scout_poem(request):
     prompt = request.data.get('prompt', 'Write a short poem about AI.')
     poem = llama_scout_poem(prompt)
     return Response({"poem": poem})
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def maverick_describe(request):
     image_url = request.data.get('image_url')
     if not image_url:
         return Response({"detail": "image_url is required"}, status=400)
     desc = llama_maverick_describe(image_url)
     return Response({"description": desc})
+
+@login_required
+def product_search(request):
+    """Main product search view - requires authentication"""
+    query = request.GET.get('q', '')
+    category = request.GET.get('category', '')
+    page = request.GET.get('page', 1)
+    
+    items = []
+    total_items = 0
+    
+    if query:
+        try:
+            ebay_service = EbayService()
+            
+            # Search filters
+            filters = {}
+            if category:
+                filters['category_ids'] = category
+                
+            # Search eBay
+            results = ebay_service.search_items(
+                query=query, 
+                limit=50, 
+                filters=filters
+            )
+            
+            # Process results
+            if 'itemSummaries' in results:
+                items = process_search_results(results['itemSummaries'])
+                total_items = results.get('total', 0)
+                
+            # Save search history for authenticated user
+            save_search_history(request.user, query, category, len(items))
+                
+        except Exception as e:
+            messages.error(request, f"Search error: {str(e)}")
+    
+    # Pagination
+    paginator = Paginator(items, 12)  # 12 items per page
+    page_obj = paginator.get_page(page)
+    
+    context = {
+        'items': page_obj,
+        'query': query,
+        'category': category,
+        'total_items': total_items,
+        'categories': get_categories(),
+        'user': request.user
+    }
+    
+    return render(request, 'templates/search.html', context)
+
+def process_search_results(item_summaries):
+    """Process eBay API results into a standardized format"""
+    processed_items = []
+    
+    for item in item_summaries:
+        processed_item = {
+            'ebay_id': item.get('itemId'),
+            'title': item.get('title'),
+            'price': item.get('price', {}).get('value', 0),
+            'currency': item.get('price', {}).get('currency', 'USD'),
+            'condition': item.get('condition', 'Unknown'),
+            'image_url': item.get('image', {}).get('imageUrl', ''),
+            'item_url': item.get('itemWebUrl', ''),
+            'seller_username': item.get('seller', {}).get('username', ''),
+            'location': item.get('itemLocation', {}).get('country', ''),
+            'shipping_cost': item.get('shippingOptions', [{}])[0].get('shippingCost', {}).get('value', 0) if item.get('shippingOptions') else 0
+        }
+        processed_items.append(processed_item)
+        
+        # Optionally cache in database
+        cache_item_in_db(processed_item)
+    
+    return processed_items
+
+def cache_item_in_db(item_data):
+    """Cache item in database"""
+    try:
+        EbayItem.objects.update_or_create(
+            ebay_id=item_data['ebay_id'],
+            defaults=item_data
+        )
+    except Exception as e:
+        print(f"Error caching item: {e}")
+
+def save_search_history(user, query, category, results_count):
+    """Save user's search history"""
+    try:
+        SearchHistory.objects.create(
+            user=user,
+            query=query,
+            category=category,
+            results_count=results_count,
+            timestamp=timezone.now()
+        )
+    except Exception as e:
+        print(f"Error saving search history: {e}")
+
+def get_categories():
+    """Return popular eBay categories"""
+    return [
+        {'id': '58058', 'name': 'Electronics'},
+        {'id': '11450', 'name': 'Clothing'},
+        {'id': '6028', 'name': 'Home & Garden'},
+        {'id': '2984', 'name': 'Sports'},
+        {'id': '267', 'name': 'Books'},
+        {'id': '550', 'name': 'Art'},
+    ]
+
+@login_required
+def item_detail(request, item_id):
+    """View for individual item details - requires authentication"""
+    try:
+        ebay_service = EbayService()
+        item_details = ebay_service.get_item_details(item_id)
+        
+        # Check if user has favorited this item
+        is_favorited = UserFavorite.objects.filter(
+            user=request.user, 
+            ebay_id=item_id
+        ).exists()
+        
+        context = {
+            'item': item_details,
+            'is_favorited': is_favorited,
+            'user': request.user
+        }
+        
+        return render(request, 'templates/search.html', context)
+        
+    except Exception as e:
+        messages.error(request, f"Error loading item: {str(e)}")
+        return redirect('product_search')
+
+@login_required
+def toggle_favorite(request, item_id):
+    """Toggle item favorite status"""
+    if request.method == 'POST':
+        try:
+            favorite, created = UserFavorite.objects.get_or_create(
+                user=request.user,
+                ebay_id=item_id
+            )
+            
+            if not created:
+                favorite.delete()
+                favorited = False
+            else:
+                favorited = True
+                
+            return JsonResponse({
+                'favorited': favorited,
+                'message': 'Added to favorites' if favorited else 'Removed from favorites'
+            })
+            
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    
+    return JsonResponse({'error': 'Invalid request'}, status=400)
+
+@login_required
+def user_favorites(request):
+    """Display user's favorite items"""
+    favorites = UserFavorite.objects.filter(user=request.user).order_by('-created_at')
+    
+    # Paginate favorites
+    paginator = Paginator(favorites, 12)
+    page = request.GET.get('page', 1)
+    page_obj = paginator.get_page(page)
+    
+    context = {
+        'favorites': page_obj,
+        'user': request.user
+    }
+    
+    return render(request, 'templates/search.html', context)
+
+@login_required
+def search_history(request):
+    """Display user's search history"""
+    history = SearchHistory.objects.filter(user=request.user).order_by('-timestamp')
+    
+    # Paginate history
+    paginator = Paginator(history, 20)
+    page = request.GET.get('page', 1)
+    page_obj = paginator.get_page(page)
+    
+    context = {
+        'history': page_obj,
+        'user': request.user
+    }
+    
+    return render(request, 'template/search.html', context)
+
+@login_required
+def user_dashboard(request):
+    """User dashboard with recent activity"""
+    recent_searches = SearchHistory.objects.filter(user=request.user).order_by('-timestamp')[:5]
+    recent_favorites = UserFavorite.objects.filter(user=request.user).order_by('-created_at')[:5]
+    
+    context = {
+        'user': request.user,
+        'recent_searches': recent_searches,
+        'recent_favorites': recent_favorites,
+        'total_searches': SearchHistory.objects.filter(user=request.user).count(),
+        'total_favorites': UserFavorite.objects.filter(user=request.user).count()
+    }
+    
+    return render(request, 'template/search.html', context)

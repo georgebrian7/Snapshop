@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from snapapp import views
+app_name = 'products'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,5 +27,7 @@ urlpatterns = [
     path('scout/', views.scout_poem, name='scout_poem'),
     path('maverick/', views.maverick_describe, name='maverick_describe'),
     path('product',views.product,name='product'),
+    path('search', views.product_search, name='search'),
+    path('item/<str:item_id>/', views.item_detail, name='detail'),
     
 ]
