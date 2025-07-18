@@ -5,7 +5,7 @@ import base64
 from dotenv import load_dotenv
 from django.core.cache import cache
 
-# Load environment variables from .env file
+
 load_dotenv()
 
 class EbayService:
@@ -14,11 +14,11 @@ class EbayService:
         self.dev_id = os.getenv('EBAY_DEV_ID')
         self.cert_id = os.getenv('EBAY_CERT_ID')
         
-        # Handle boolean conversion for sandbox mode
+        
         sandbox_env = os.getenv('EBAY_SANDBOX', 'True').lower()
         self.sandbox = sandbox_env in ('true', '1', 'yes', 'on')
         
-        # API endpoints
+       
         if self.sandbox:
             self.base_url = "https://api.sandbox.ebay.com"
         else:

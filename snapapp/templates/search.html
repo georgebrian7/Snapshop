@@ -34,7 +34,7 @@
             </form>
         </div>
 
-        <!-- Results -->
+        
         {% if query %}
             <div class="results-header">
                 <h2 class="results-title">Search Results for "{{ query }}" ({{ total_items }} items)</h2>
@@ -65,7 +65,7 @@
                 {% endfor %}
             </div>
 
-            <!-- Pagination -->
+            
             {% if items.has_other_pages %}
                 <div class="pagination-container">
                     <nav class="pagination-nav">

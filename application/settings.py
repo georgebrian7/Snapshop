@@ -139,9 +139,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-LOGIN_REDIRECT_URL = "index"
+LOGIN_REDIRECT_URL = "products:index"
 LOGOUT_REDIRECT_URL = "/"
-
+LOGIN_URL = '/accounts/login/'
 load_dotenv()
 
 

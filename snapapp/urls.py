@@ -20,13 +20,12 @@ from snapapp import views
 app_name = 'products'
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
     path('',views.welcome, name = 'welcome'),
-    path('index',views.index,name='index'),
-    path('camera', views.camera, name = 'camera view'),
+    path('index/',views.index,name='index'),
+    path('camera/', views.camera, name = 'camera view'),
     path('scout/', views.scout_poem, name='scout_poem'),
     path('maverick/', views.maverick_describe, name='maverick_describe'),
-    path('product',views.product,name='product'),
+    path('product/',views.product, name='product'),
     path('search', views.product_search, name='search'),
     path('item/<str:item_id>/', views.item_detail, name='detail'),
     

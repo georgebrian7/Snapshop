@@ -1,3 +1,4 @@
+import os
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from django.core.files.storage import FileSystemStorage
@@ -28,12 +29,15 @@ from django.utils import timezone
 
 
 # Create your views here.
+@login_required
 def index(request):
     return render(request, 'index.html')
 
 def welcome(request):
     return render(request, 'welcome.html')
 
+
+@login_required
 def product(request):
     return render(request, 'product.html')
 
@@ -49,9 +53,10 @@ def camera(request):
         name = str(image.name).split('\\')[-1]
         name += '.jpg'  
         image.name = name
-        with open('image.txt', 'w+') as file:
-            file.write(str(name))
-        default_storage.save('C:/Users/George Brian/repos/SNAPSHOP/snapapp/static/images/a.jpg', ContentFile(urlopen(image_path).read()))
+        
+        with open(local_static_path, 'wb') as f:
+            local_static_path = os.path.join(settings.BASE_DIR, 'snapapp', 'static', 'images', 'a.jpg')
+        f.write(urlopen(image_path).read())
         return HttpResponse('Done!')
     return render(request, 'index.html')
 
@@ -85,30 +90,30 @@ def product_search(request):
         try:
             ebay_service = EbayService()
             
-            # Search filters
+            
             filters = {}
             if category:
                 filters['category_ids'] = category
                 
-            # Search eBay
+            
             results = ebay_service.search_items(
                 query=query, 
                 limit=50, 
                 filters=filters
             )
             
-            # Process results
+            
             if 'itemSummaries' in results:
                 items = process_search_results(results['itemSummaries'])
                 total_items = results.get('total', 0)
                 
-            # Save search history for authenticated user
+            
             save_search_history(request.user, query, category, len(items))
                 
         except Exception as e:
             messages.error(request, f"Search error: {str(e)}")
     
-    # Pagination
+    
     paginator = Paginator(items, 12)  # 12 items per page
     page_obj = paginator.get_page(page)
     
@@ -121,10 +126,10 @@ def product_search(request):
         'user': request.user
     }
     
-    return render(request, 'templates/search.html', context)
+    return render(request, 'search.html', context)
 
 def process_search_results(item_summaries):
-    """Process eBay API results into a standardized format"""
+    
     processed_items = []
     
     for item in item_summaries:
@@ -142,13 +147,13 @@ def process_search_results(item_summaries):
         }
         processed_items.append(processed_item)
         
-        # Optionally cache in database
+        
         cache_item_in_db(processed_item)
     
     return processed_items
 
 def cache_item_in_db(item_data):
-    """Cache item in database"""
+    
     try:
         EbayItem.objects.update_or_create(
             ebay_id=item_data['ebay_id'],
@@ -171,7 +176,7 @@ def save_search_history(user, query, category, results_count):
         print(f"Error saving search history: {e}")
 
 def get_categories():
-    """Return popular eBay categories"""
+    
     return [
         {'id': '58058', 'name': 'Electronics'},
         {'id': '11450', 'name': 'Clothing'},
@@ -183,12 +188,12 @@ def get_categories():
 
 @login_required
 def item_detail(request, item_id):
-    """View for individual item details - requires authentication"""
+    
     try:
         ebay_service = EbayService()
         item_details = ebay_service.get_item_details(item_id)
         
-        # Check if user has favorited this item
+        
         is_favorited = UserFavorite.objects.filter(
             user=request.user, 
             ebay_id=item_id
@@ -200,7 +205,7 @@ def item_detail(request, item_id):
             'user': request.user
         }
         
-        return render(request, 'templates/search.html', context)
+        return render(request, 'search.html', context)
         
     except Exception as e:
         messages.error(request, f"Error loading item: {str(e)}")
@@ -234,10 +239,10 @@ def toggle_favorite(request, item_id):
 
 @login_required
 def user_favorites(request):
-    """Display user's favorite items"""
+    
     favorites = UserFavorite.objects.filter(user=request.user).order_by('-created_at')
     
-    # Paginate favorites
+    
     paginator = Paginator(favorites, 12)
     page = request.GET.get('page', 1)
     page_obj = paginator.get_page(page)
@@ -247,14 +252,14 @@ def user_favorites(request):
         'user': request.user
     }
     
-    return render(request, 'templates/search.html', context)
+    return render(request, 'search.html', context)
 
 @login_required
 def search_history(request):
-    """Display user's search history"""
+    
     history = SearchHistory.objects.filter(user=request.user).order_by('-timestamp')
     
-    # Paginate history
+   
     paginator = Paginator(history, 20)
     page = request.GET.get('page', 1)
     page_obj = paginator.get_page(page)
@@ -264,11 +269,11 @@ def search_history(request):
         'user': request.user
     }
     
-    return render(request, 'template/search.html', context)
+    return render(request, 'search.html', context)
 
 @login_required
 def user_dashboard(request):
-    """User dashboard with recent activity"""
+    
     recent_searches = SearchHistory.objects.filter(user=request.user).order_by('-timestamp')[:5]
     recent_favorites = UserFavorite.objects.filter(user=request.user).order_by('-created_at')[:5]
     
@@ -280,4 +285,4 @@ def user_dashboard(request):
         'total_favorites': UserFavorite.objects.filter(user=request.user).count()
     }
     
-    return render(request, 'template/search.html', context)
+    return render(request, 'search.html', context)
