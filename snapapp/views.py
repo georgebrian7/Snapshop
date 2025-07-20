@@ -53,10 +53,9 @@ def camera(request):
         name = str(image.name).split('\\')[-1]
         name += '.jpg'  
         image.name = name
-        
-        with open(local_static_path, 'wb') as f:
-            local_static_path = os.path.join(settings.BASE_DIR, 'snapapp', 'static', 'images', 'a.jpg')
-        f.write(urlopen(image_path).read())
+        with open('image.txt', 'w+') as file:
+            file.write(str(name))
+        default_storage.save('C:/Users/George Brian/repos/SNAPSHOP/snapapp/static/images/a.jpg', ContentFile(urlopen(image_path).read()))
         return HttpResponse('Done!')
     return render(request, 'index.html')
 
@@ -114,7 +113,7 @@ def product_search(request):
             messages.error(request, f"Search error: {str(e)}")
     
     
-    paginator = Paginator(items, 12)  # 12 items per page
+    paginator = Paginator(items, 12)  
     page_obj = paginator.get_page(page)
     
     context = {
@@ -163,7 +162,7 @@ def cache_item_in_db(item_data):
         print(f"Error caching item: {e}")
 
 def save_search_history(user, query, category, results_count):
-    """Save user's search history"""
+
     try:
         SearchHistory.objects.create(
             user=user,

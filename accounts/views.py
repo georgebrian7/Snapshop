@@ -6,7 +6,7 @@ from django.contrib.auth import login
 from .forms import CustomSignupForm
 
 class SignUpView(CreateView):
-    form_class = UserCreationForm
+    form_class = CustomSignupForm
     success_url = reverse_lazy('index')
     template_name = 'registration/signup.html'
 
