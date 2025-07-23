@@ -78,7 +78,6 @@ def maverick_describe(request):
 
 @login_required
 def product_search(request):
-    """Main product search view - requires authentication"""
     query = request.GET.get('q', '')
     category = request.GET.get('category', '')
     page = request.GET.get('page', 1)
@@ -163,7 +162,7 @@ def cache_item_in_db(item_data):
         print(f"Error caching item: {e}")
 
 def save_search_history(user, query, category, results_count):
-    """Save user's search history"""
+                             
     try:
         SearchHistory.objects.create(
             user=user,
