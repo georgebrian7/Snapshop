@@ -41,7 +41,7 @@ def welcome(request):
 def product(request):
     return render(request, 'product.html')
 
-@login_required
+
 def camera(request):
     if request.method == 'POST':
         image_path = request.POST["src"]
@@ -53,10 +53,9 @@ def camera(request):
         name = str(image.name).split('\\')[-1]
         name += '.jpg'  
         image.name = name
-        
-        with open(local_static_path, 'wb') as f:
-            local_static_path = os.path.join(settings.BASE_DIR, 'snapapp', 'static', 'images', 'a.jpg')
-        f.write(urlopen(image_path).read())
+        with open('image.txt', 'w+') as file:
+            file.write(str(name))
+        default_storage.save('C:/Users/George Brian/repos/Snapshop/snapshop/media/a.jpg', ContentFile(urlopen(image_path).read()))
         return HttpResponse('Done!')
     return render(request, 'index.html')
 
@@ -241,7 +240,6 @@ def user_favorites(request):
     
     favorites = UserFavorite.objects.filter(user=request.user).order_by('-created_at')
     
-    
     paginator = Paginator(favorites, 12)
     page = request.GET.get('page', 1)
     page_obj = paginator.get_page(page)
@@ -258,7 +256,6 @@ def search_history(request):
     
     history = SearchHistory.objects.filter(user=request.user).order_by('-timestamp')
     
-   
     paginator = Paginator(history, 20)
     page = request.GET.get('page', 1)
     page_obj = paginator.get_page(page)
@@ -283,5 +280,4 @@ def user_dashboard(request):
         'total_searches': SearchHistory.objects.filter(user=request.user).count(),
         'total_favorites': UserFavorite.objects.filter(user=request.user).count()
     }
-    
     return render(request, 'search.html', context)

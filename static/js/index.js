@@ -17,7 +17,7 @@
     startbutton = document.getElementById('startbutton');
 
     navigator.mediaDevices.getUserMedia({video: true, audio: false})
-    .then(function(stream) {
+    .then((stream) => {
       video.srcObject = stream;
       video.play();
     })
