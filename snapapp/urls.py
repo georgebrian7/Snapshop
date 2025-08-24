@@ -26,7 +26,7 @@ urlpatterns = [
     path('scout/', views.scout_poem, name='scout_poem'),
     path('maverick/', views.maverick_describe, name='maverick_describe'),
     path('product/',views.product, name='product'),
-    path('search', views.product_search, name='search'),
+    path('product_search', views.product_search, name='product_search'),
     path('item/<str:item_id>/', views.item_detail, name='detail'),
-    
+    path('capture-and-search/', views.capture_and_search, name='capture_and_search'),
 ]

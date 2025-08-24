@@ -1,38 +1,26 @@
+// static/js/index.js
 (function() {
-  var width = 320;    
-  var height = 0;     
-  var streaming = false;
+  let width = 320;
+  let height = 0;
+  let streaming = false;
 
-  var video = null;
-  var canvas = null;
-  var photo = null;
-  var formsrc = null;
-  var startbutton = null;
+  const video = document.getElementById('video');
+  const canvas = document.getElementById('canvas');
+  const photo = document.getElementById('photo');
+  const formInput = document.getElementById('webimg');
+  const startbutton = document.getElementById('startbutton');
 
   function startup() {
-    video = document.getElementById('video');
-    canvas = document.getElementById('canvas');
-    photo = document.getElementById('photo');
-    formsrc = document.getElementById('webimg');
-    startbutton = document.getElementById('startbutton');
+    navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+      .then(stream => {
+        video.srcObject = stream;
+        video.play();
+      })
+      .catch(err => console.error("Camera error:", err));
 
-    navigator.mediaDevices.getUserMedia({video: true, audio: false})
-    .then((stream) => {
-      video.srcObject = stream;
-      video.play();
-    })
-    .catch(function(err) {
-      console.log("An error occurred: " + err);
-    });
-
-    video.addEventListener('canplay', function(ev){
+    video.addEventListener('canplay', () => {
       if (!streaming) {
-        height = video.videoHeight / (video.videoWidth/width);
-
-        if (isNaN(height)) {
-          height = width / (4/3);
-        }
-
+        height = video.videoHeight / (video.videoWidth / width) || (width / 4 * 3);
         video.setAttribute('width', width);
         video.setAttribute('height', height);
         canvas.setAttribute('width', width);
@@ -41,7 +29,7 @@
       }
     }, false);
 
-    startbutton.addEventListener('click', function(ev){
+    startbutton.addEventListener('click', ev => {
       takepicture();
       ev.preventDefault();
     }, false);
@@ -49,31 +37,27 @@
     clearphoto();
   }
 
-
   function clearphoto() {
-    var context = canvas.getContext('2d');
-    context.fillStyle = "#AAA";
-    context.fillRect(0, 0, canvas.width, canvas.height);
-
-    var data = canvas.toDataURL('image/png');
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = "#AAA";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    const data = canvas.toDataURL('image/png');
     photo.setAttribute('src', data);
   }
 
   function takepicture() {
-    var context = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d');
     if (width && height) {
       canvas.width = width;
       canvas.height = height;
-      context.drawImage(video, 0, 0, width, height);
-
-      var data = canvas.toDataURL('image/png');
+      ctx.drawImage(video, 0, 0, width, height);
+      const data = canvas.toDataURL('image/png');
       photo.setAttribute('src', data);
-      formsrc.setAttribute('value', data);
+      formInput.value = data;
     } else {
       clearphoto();
     }
   }
-
 
   window.addEventListener('load', startup, false);
 })();

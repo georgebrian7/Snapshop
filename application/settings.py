@@ -137,12 +137,34 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
+TOGETHER_API_KEY = os.getenv('TOGETHER_API_KEY')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = "products:index"
 LOGOUT_REDIRECT_URL = "/"
 LOGIN_URL = '/accounts/login/'
 load_dotenv()
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'snapapp': {'handlers': ['console'], 'level': 'INFO', 'propagate': False},
+    },
+}
 
 
 

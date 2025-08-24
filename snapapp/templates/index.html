@@ -23,7 +23,7 @@
                         <video id="video">Switch on camera</video>
                         
                         
-                        <input id="webimg" value="" name="src" type="text" style="display: none;">
+                        <input id="webimg" value="" name="image_data" type="text" style="display: none;">
                         <canvas id="canvas">
                         </canvas>
                     </div>
@@ -34,8 +34,9 @@
                     <br>
                     <div class="controls">
                         <button id="startbutton" type="button "><img src="{% static 'images/camera.png'%}" alt=""></button>
-                        <a href="{% url 'products:search' %}" type="button" class="button"><img src="{% static 'images/inspect.png' %}" alt="">
-                        </a>
+                        <button type="submit" formaction="{% url 'products:capture_and_search' %}">
+                         <img src="{% static 'images/inspect.png' %}" alt="Search">
+                         </button>
                     </div>
                     
                 </form>

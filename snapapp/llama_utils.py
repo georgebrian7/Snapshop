@@ -22,16 +22,37 @@ def llama_scout_poem(prompt, max_tokens=150, temperature=0.7):
 def llama_maverick_describe(image_url, max_tokens=200):
     url = "https://api.together.ai/v1/chat/completions"
     payload = {
-        "model": "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8",
-        "messages": [{
+    "model": "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8",
+    "messages": [
+        {
+            "role": "system",
+            "content": (
+                 "You are an accurate visual classification assistant. "
+                "When given an image, return exactly the single object name "
+                "at the center, nothing more."
+            ),
+        },
+        {
             "role": "user",
             "content": [
                 {"type": "image_url", "image_url": {"url": image_url}},
-                {"type": "text", "text": "Describe this image."},
+                {
+                    "type": "text",
+                    "text": (
+                        "Identify the main singular object in the center of this image. "
+                        "Return only the object's name, nothing else. "
+                        "This name will be used as a search query on eBay."
+                        "Be as specific as possible by checking product for color ,name tag, brand icon or brand name"
+                    ),
+                },
             ],
-        }],
-        "max_tokens": max_tokens,
+        },
+    ],
+    "max_tokens": max_tokens,
+    "temperature": 0.0,
+    "top_p": 1.0,
     }
+
     headers = {
         "Authorization": f"Bearer {settings.TOGETHER_API_KEY}",
         "Content-Type": "application/json",

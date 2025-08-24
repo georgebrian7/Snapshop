@@ -26,8 +26,11 @@ from services.ebay_service import EbayService
 from .models import EbayItem, SearchHistory, UserFavorite
 import json
 from django.utils import timezone
-
-
+import base64
+from django.http import HttpResponseBadRequest
+import logging
+from django.urls import reverse
+from urllib.parse import urlencode
 # Create your views here.
 @login_required
 def index(request):
@@ -41,7 +44,7 @@ def welcome(request):
 def product(request):
     return render(request, 'product.html')
 
-
+@login_required
 def camera(request):
     if request.method == 'POST':
         image_path = request.POST["src"]
@@ -55,7 +58,7 @@ def camera(request):
         image.name = name
         with open('image.txt', 'w+') as file:
             file.write(str(name))
-        default_storage.save('C:/Users/George Brian/repos/Snapshop/snapshop/media/a.jpg', ContentFile(urlopen(image_path).read()))
+        default_storage.save('C:/Users/George Brian/repos/SNAPSHOP/snapapp/static/images/a.jpg', ContentFile(urlopen(image_path).read()))
         return HttpResponse('Done!')
     return render(request, 'index.html')
 
@@ -77,6 +80,7 @@ def maverick_describe(request):
 
 @login_required
 def product_search(request):
+    """Main product search view - requires authentication"""
     query = request.GET.get('q', '')
     category = request.GET.get('category', '')
     page = request.GET.get('page', 1)
@@ -112,7 +116,7 @@ def product_search(request):
             messages.error(request, f"Search error: {str(e)}")
     
     
-    paginator = Paginator(items, 12)  # 12 items per page
+    paginator = Paginator(items, 12)  
     page_obj = paginator.get_page(page)
     
     context = {
@@ -161,7 +165,7 @@ def cache_item_in_db(item_data):
         print(f"Error caching item: {e}")
 
 def save_search_history(user, query, category, results_count):
-                             
+
     try:
         SearchHistory.objects.create(
             user=user,
@@ -240,6 +244,7 @@ def user_favorites(request):
     
     favorites = UserFavorite.objects.filter(user=request.user).order_by('-created_at')
     
+    
     paginator = Paginator(favorites, 12)
     page = request.GET.get('page', 1)
     page_obj = paginator.get_page(page)
@@ -256,6 +261,7 @@ def search_history(request):
     
     history = SearchHistory.objects.filter(user=request.user).order_by('-timestamp')
     
+   
     paginator = Paginator(history, 20)
     page = request.GET.get('page', 1)
     page_obj = paginator.get_page(page)
@@ -280,4 +286,42 @@ def user_dashboard(request):
         'total_searches': SearchHistory.objects.filter(user=request.user).count(),
         'total_favorites': UserFavorite.objects.filter(user=request.user).count()
     }
+    
     return render(request, 'search.html', context)
+logger = logging.getLogger(__name__)
+@login_required
+def capture_and_search(request):
+    if request.method != 'POST':
+        return render(request, 'index.html')
+
+    image_data = request.POST.get('image_data')
+    if not image_data:
+        logger.error("capture_and_search: missing image_data")
+        messages.error(request, "Capture a photo before searching.")
+        return redirect(reverse('products:index'))
+
+    try:
+        header, encoded = image_data.split(',', 1)
+        image_bytes = base64.b64decode(encoded)
+    except Exception:
+        logger.exception("capture_and_search: failed to decode image_data")
+        messages.error(request, "Invalid image data.")
+        return redirect(reverse('products:index'))
+
+    # ... saving logic ...
+
+    try:
+        description = llama_maverick_describe(image_data)
+        logger.info("Maverick description: %s", description)
+    except Exception:
+        logger.exception("capture_and_search: description call failed")
+        messages.error(request, "Failed to describe the image.")
+        return redirect(reverse('products:index'))
+
+    if not description:
+        messages.error(request, "No description created; try again.")
+        return redirect(reverse('products:index'))
+
+    url = reverse('products:product_search')
+    full_redirect = f"{url}?{urlencode({'q': description})}"
+    return redirect(full_redirect)
