@@ -138,7 +138,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 TOGETHER_API_KEY = os.getenv('TOGETHER_API_KEY')
-
+DEEPSEEK_API_KEY = os.getenv('DEEPSEEK_API_KEY')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = "products:index"
 LOGOUT_REDIRECT_URL = "/"

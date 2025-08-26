@@ -5,6 +5,16 @@
         <link rel="stylesheet" href="{% static 'css/search.css' %}" type="text/css" media="all">
 </head>
 <body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">SNAPSHOP<img src="{% static '/images/new.png' %}" alt="Logo" class="logo-pic"></a>
+            
+            <ul class="nav-links">
+               
+                <li><a href="{% url 'products:product' %}">PROFILE</a></li>
+            </ul>
+        </div>
+    </nav>
     <div class="container">
         <!-- Search Form -->
         <div class="search-form-container">
@@ -36,9 +46,9 @@
 
         
         {% if query %}
-            <div class="results-header">
+            <!-- <div class="results-header">
                 <h2 class="results-title">Search Results for "{{ query }}" ({{ total_items }} items)</h2>
-            </div>
+            </div> -->
             
             <div class="items-grid">
                 {% for item in items %}

@@ -39,7 +39,7 @@
 
   function clearphoto() {
     const ctx = canvas.getContext('2d');
-    ctx.fillStyle = "#AAA";
+    ctx.fillStyle = "#0d0202ff";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     const data = canvas.toDataURL('image/png');
     photo.setAttribute('src', data);

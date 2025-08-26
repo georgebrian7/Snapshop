@@ -3,282 +3,196 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Products - Your Store</title>
+    <title>Profile Page</title>
     <link rel="stylesheet" href="{% static 'css/product.css' %}" type="text/css" media="all">
 </head>
 <body>
     <!-- Navigation Bar -->
     <nav class="navbar">
         <div class="nav-container">
-            <a href="#" class="logo">Your Store</a>
+            <a href="#" class="logo">Profile</a>
             <ul class="nav-links">
-                <li><a href="#products">Products</a></li>
-                <li><a href="#categories">Categories</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
-                <li><a href="#cart">Cart (0)</a></li>
+                <li><a href="#products">Purchases</a></li>
+                <li><a href="#favorites">Favorites</a></li>
+                
+                <li><a href="#logout">Logout</a></li>
             </ul>
         </div>
     </nav>
 
+    <!-- Profile Section -->
+    <section class="profile-section">
+        <div class="profile-container">
+            <div class="profile-content">
+                <img src="https://static.vecteezy.com/system/resources/previews/026/434/409/non_2x/default-avatar-profile-icon-social-media-user-photo-vector.jpg" alt="User Avatar" class="profile-avatar">
+                
+                <div class="profile-info">
+                    <h1 class="profile-name">{{ user.username }}</h1>
+                    <p class="profile-email">{{ user.email }}</p>
+                    
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <span class="stat-number">0</span>
+                            <span class="stat-label">Orders</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">0</span>
+                            <span class="stat-label">Favorites</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">0</span>
+                            <span class="stat-label">Reviews</span>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Search and Filter Section -->
-    <div class="search-section">
+    <section class="search-section">
         <div class="search-container">
-            <form class="search-form" onsubmit="return false;">
-                <input 
-                    type="text" 
-                    id="searchInput"
-                    placeholder="Search products..." 
-                    class="search-input"
-                    oninput="filterProducts()"
-                >
-                <select id="categoryFilter" class="filter-select" onchange="filterProducts()">
-                    <option value="">All Categories</option>
+            <form class="search-form">
+                <input type="text" class="search-input" placeholder="Search your purchase history...">
+                <select class="filter-select">
+                    <option value="all">All Categories</option>
                     <option value="electronics">Electronics</option>
                     <option value="clothing">Clothing</option>
-                    <option value="books">Books</option>
                     <option value="home">Home & Garden</option>
+                    <option value="books">Books</option>
                     <option value="sports">Sports</option>
                 </select>
-                <button type="button" class="btn btn-primary" onclick="filterProducts()">Search</button>
+                <select class="filter-select">
+                    <option value="recent">Most Recent</option>
+                    <option value="oldest">Oldest First</option>
+                    <option value="price-high">Price: High to Low</option>
+                    <option value="price-low">Price: Low to High</option>
+                </select>
+                <button type="submit" class="btn btn-primary">Search</button>
             </form>
         </div>
-    </div>
+    </section>
 
-    <!-- Products Section -->
+    <!-- Purchase History Section -->
     <div class="products-section" id="products">
-        <h1 class="section-title">Our Products</h1>
+        <h1 class="section-title">Search History</h1>
         
         <div class="products-grid" id="productsGrid">
             <!-- Product 1 -->
-            <div class="product-card" data-category="electronics" data-name="wireless bluetooth headphones premium sound quality">
-                <div class="discount-badge">-25%</div>
-                <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=300&fit=crop" alt="Wireless Headphones" class="product-image">
+            <div class="product-card" data-category="electronics">
+                <img src="https://static.vecteezy.com/system/resources/previews/026/434/409/non_2x/default-avatar-profile-icon-social-media-user-photo-vector.jpg" alt="Wireless Headphones" class="product-image">
                 <div class="product-info">
                     <div class="product-category">Electronics</div>
                     <h3 class="product-title">Wireless Bluetooth Headphones</h3>
-                    <p class="product-description">Premium sound quality with noise cancellation and 30-hour battery life</p>
+                    <p class="product-description">Premium sound quality with active noise cancellation and 30-hour battery life.</p>
+                    <div class="purchase-date">Purchased on March 15, 2024</div>
                     <div class="product-price">
-                        <span class="current-price">$149.99</span>
-                        <span class="original-price">$199.99</span>
+                        <span class="current-price">$199.99</span>
+                        <span class="original-price">$249.99</span>
                     </div>
-                    <div class="stock-status in-stock">✓ In Stock (15 available)</div>
                     <div class="product-actions">
-                        <button class="btn btn-outline" onclick="viewProduct(1)">View Details</button>
-                        <button class="btn btn-primary" onclick="addToCart(1)">Add to Cart</button>
+                        <button class="btn btn-outline">Buy Again</button>
+                        <button class="btn btn-outline">Write Review</button>
                     </div>
                 </div>
             </div>
 
             <!-- Product 2 -->
-            <div class="product-card" data-category="clothing" data-name="cotton t-shirt comfortable casual wear">
-                <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=300&fit=crop" alt="Cotton T-Shirt" class="product-image">
+            <div class="product-card" data-category="clothing">
+                <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=250&fit=crop" alt="Cotton T-Shirt" class="product-image">
                 <div class="product-info">
                     <div class="product-category">Clothing</div>
                     <h3 class="product-title">Premium Cotton T-Shirt</h3>
-                    <p class="product-description">Comfortable and breathable cotton t-shirt perfect for casual wear</p>
+                    <p class="product-description">100% organic cotton, comfortable fit, available in multiple colors and sizes.</p>
+                    <div class="purchase-date">Purchased on March 10, 2024</div>
                     <div class="product-price">
                         <span class="current-price">$29.99</span>
                     </div>
-                    <div class="stock-status in-stock">✓ In Stock (25 available)</div>
                     <div class="product-actions">
-                        <button class="btn btn-outline" onclick="viewProduct(2)">View Details</button>
-                        <button class="btn btn-primary" onclick="addToCart(2)">Add to Cart</button>
+                        <button class="btn btn-outline">Buy Again</button>
+                        <button class="btn btn-outline">Write Review</button>
                     </div>
                 </div>
             </div>
 
             <!-- Product 3 -->
-            <div class="product-card" data-category="books" data-name="javascript programming guide web development">
-                <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&h=300&fit=crop" alt="Programming Book" class="product-image">
+            <div class="product-card" data-category="home">
+                <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=250&fit=crop" alt="Smart Coffee Maker" class="product-image">
                 <div class="product-info">
-                    <div class="product-category">Books</div>
-                    <h3 class="product-title">JavaScript Programming Guide</h3>
-                    <p class="product-description">Complete guide to modern JavaScript and web development techniques</p>
+                    <div class="product-category">Home & Kitchen</div>
+                    <h3 class="product-title">Smart Coffee Maker</h3>
+                    <p class="product-description">WiFi-enabled coffee maker with programmable brewing and smartphone app control.</p>
+                    <div class="purchase-date">Purchased on March 5, 2024</div>
                     <div class="product-price">
-                        <span class="current-price">$45.99</span>
+                        <span class="current-price">$149.99</span>
+                        <span class="original-price">$179.99</span>
                     </div>
-                    <div class="stock-status in-stock">✓ In Stock (8 available)</div>
                     <div class="product-actions">
-                        <button class="btn btn-outline" onclick="viewProduct(3)">View Details</button>
-                        <button class="btn btn-primary" onclick="addToCart(3)">Add to Cart</button>
+                        <button class="btn btn-outline">Buy Again</button>
+                        <button class="btn btn-outline">Write Review</button>
                     </div>
                 </div>
             </div>
 
             <!-- Product 4 -->
-            <div class="product-card" data-category="home" data-name="ceramic coffee mug kitchen dining">
-                <div class="discount-badge">-15%</div>
-                <img src="https://images.unsplash.com/photo-1514228742587-6b1558fcf93a?w=400&h=300&fit=crop" alt="Coffee Mug" class="product-image">
+            <div class="product-card" data-category="books">
+                <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&h=250&fit=crop" alt="Programming Book" class="product-image">
                 <div class="product-info">
-                    <div class="product-category">Home & Garden</div>
-                    <h3 class="product-title">Ceramic Coffee Mug Set</h3>
-                    <p class="product-description">Beautiful handcrafted ceramic mugs perfect for your morning coffee</p>
+                    <div class="product-category">Books</div>
+                    <h3 class="product-title">JavaScript: The Complete Guide</h3>
+                    <p class="product-description">Comprehensive guide to modern JavaScript development with practical examples and projects.</p>
+                    <div class="purchase-date">Purchased on February 28, 2024</div>
                     <div class="product-price">
-                        <span class="current-price">$24.99</span>
-                        <span class="original-price">$29.99</span>
+                        <span class="current-price">$45.99</span>
                     </div>
-                    <div class="stock-status in-stock">✓ In Stock (12 available)</div>
                     <div class="product-actions">
-                        <button class="btn btn-outline" onclick="viewProduct(4)">View Details</button>
-                        <button class="btn btn-primary" onclick="addToCart(4)">Add to Cart</button>
+                        <button class="btn btn-outline">Buy Again</button>
+                        <button class="btn btn-outline">Write Review</button>
                     </div>
                 </div>
             </div>
 
             <!-- Product 5 -->
-            <div class="product-card" data-category="sports" data-name="yoga mat fitness exercise workout">
-                <img src="https://images.unsplash.com/photo-1506629905607-c44f2ab2d7b8?w=400&h=300&fit=crop" alt="Yoga Mat" class="product-image">
+            <div class="product-card" data-category="sports">
+                <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=250&fit=crop" alt="Running Shoes" class="product-image">
                 <div class="product-info">
-                    <div class="product-category">Sports</div>
-                    <h3 class="product-title">Premium Yoga Mat</h3>
-                    <p class="product-description">Non-slip yoga mat with extra cushioning for comfortable workouts</p>
+                    <div class="product-category">Sports & Outdoors</div>
+                    <h3 class="product-title">Professional Running Shoes</h3>
+                    <p class="product-description">Lightweight running shoes with advanced cushioning and breathable mesh upper.</p>
+                    <div class="purchase-date">Purchased on February 20, 2024</div>
                     <div class="product-price">
-                        <span class="current-price">$39.99</span>
+                        <span class="current-price">$129.99</span>
+                        <span class="original-price">$159.99</span>
                     </div>
-                    <div class="stock-status in-stock">✓ In Stock (20 available)</div>
                     <div class="product-actions">
-                        <button class="btn btn-outline" onclick="viewProduct(5)">View Details</button>
-                        <button class="btn btn-primary" onclick="addToCart(5)">Add to Cart</button>
+                        <button class="btn btn-outline">Buy Again</button>
+                        <button class="btn btn-outline">Write Review</button>
                     </div>
                 </div>
             </div>
 
             <!-- Product 6 -->
-            <div class="product-card" data-category="electronics" data-name="smartphone mobile phone android">
-                <div class="discount-badge">-30%</div>
-                <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=300&fit=crop" alt="Smartphone" class="product-image">
+            <div class="product-card" data-category="electronics">
+                <img src="https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?w=400&h=250&fit=crop" alt="Smartphone" class="product-image">
                 <div class="product-info">
                     <div class="product-category">Electronics</div>
-                    <h3 class="product-title">Latest Smartphone</h3>
-                    <p class="product-description">High-performance smartphone with advanced camera and long battery life</p>
+                    <h3 class="product-title">Latest Smartphone 128GB</h3>
+                    <p class="product-description">High-performance smartphone with advanced camera system and all-day battery life.</p>
+                    <div class="purchase-date">Purchased on February 15, 2024</div>
                     <div class="product-price">
-                        <span class="current-price">$699.99</span>
-                        <span class="original-price">$999.99</span>
+                        <span class="current-price">$799.99</span>
+                        <span class="original-price">$899.99</span>
                     </div>
-                    <div class="stock-status in-stock">✓ In Stock (5 available)</div>
                     <div class="product-actions">
-                        <button class="btn btn-outline" onclick="viewProduct(6)">View Details</button>
-                        <button class="btn btn-primary" onclick="addToCart(6)">Add to Cart</button>
+                        <button class="btn btn-outline">Buy Again</button>
+                        <button class="btn btn-outline">Write Review</button>
                     </div>
                 </div>
             </div>
-
-            <!-- Product 7 -->
-            <div class="product-card" data-category="clothing" data-name="denim jeans casual pants">
-                <img src="https://images.unsplash.com/photo-1542272604-787c3835535d?w=400&h=300&fit=crop" alt="Denim Jeans" class="product-image">
-                <div class="product-info">
-                    <div class="product-category">Clothing</div>
-                    <h3 class="product-title">Classic Denim Jeans</h3>
-                    <p class="product-description">Comfortable fit denim jeans made from high-quality cotton blend</p>
-                    <div class="product-price">
-                        <span class="current-price">$79.99</span>
-                    </div>
-                    <div class="stock-status in-stock">✓ In Stock (18 available)</div>
-                    <div class="product-actions">
-                        <button class="btn btn-outline" onclick="viewProduct(7)">View Details</button>
-                        <button class="btn btn-primary" onclick="addToCart(7)">Add to Cart</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Product 8 -->
-            <div class="product-card" data-category="home" data-name="plant pot indoor garden decoration">
-                <img src="https://images.unsplash.com/photo-1485955900006-10f4d324d411?w=400&h=300&fit=crop" alt="Plant Pot" class="product-image">
-                <div class="product-info">
-                    <div class="product-category">Home & Garden</div>
-                    <h3 class="product-title">Modern Plant Pot</h3>
-                    <p class="product-description">Stylish ceramic plant pot perfect for indoor plants and home decoration</p>
-                    <div class="product-price">
-                        <span class="current-price">$34.99</span>
-                    </div>
-                    <div class="stock-status out-of-stock">✗ Out of Stock</div>
-                    <div class="product-actions">
-                        <button class="btn btn-outline" onclick="viewProduct(8)">View Details</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- No Results Message -->
-        <div id="noResults" class="no-products" style="display: none;">
-            <h3>No products found</h3>
-            <p>Try adjusting your search criteria or browse all products.</p>
-            <button class="btn btn-primary" onclick="clearFilters()">View All Products</button>
         </div>
     </div>
 
-    <script>
-        let cart = [];
-
-        function filterProducts() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const categoryFilter = document.getElementById('categoryFilter').value;
-            const productCards = document.querySelectorAll('.product-card');
-            const noResults = document.getElementById('noResults');
-            let visibleCount = 0;
-
-            productCards.forEach(card => {
-                const productName = card.getAttribute('data-name');
-                const productCategory = card.getAttribute('data-category');
-                
-                const matchesSearch = productName.includes(searchTerm);
-                const matchesCategory = categoryFilter === '' || productCategory === categoryFilter;
-                
-                if (matchesSearch && matchesCategory) {
-                    card.style.display = 'block';
-                    visibleCount++;
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-
-            noResults.style.display = visibleCount === 0 ? 'block' : 'none';
-        }
-
-        function clearFilters() {
-            document.getElementById('searchInput').value = '';
-            document.getElementById('categoryFilter').value = '';
-            filterProducts();
-        }
-
-        function addToCart(productId) {
-            cart.push(productId);
-            updateCartDisplay();
-            
-            // Show success message
-            const button = event.target;
-            const originalText = button.textContent;
-            button.textContent = 'Added!';
-            button.style.background = '#27ae60';
-            
-            setTimeout(() => {
-                button.textContent = originalText;
-                button.style.background = '';
-            }, 1000);
-        }
-
-        function updateCartDisplay() {
-            const cartLink = document.querySelector('.nav-links a[href="#cart"]');
-            cartLink.textContent = `Cart (${cart.length})`;
-        }
-
-        function viewProduct(productId) {
-            alert(`Viewing product ${productId}. In a real application, this would navigate to a product detail page.`);
-        }
-
-        // Add smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
-    </script>
+    
 </body>
 {% endblock %}

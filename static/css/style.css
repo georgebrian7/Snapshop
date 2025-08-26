@@ -96,3 +96,37 @@ button {
   background-color: inherit;
   border: none;
 }
+.crosshairs-rectangular {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    height: 320px;
+    pointer-events: none; 
+    z-index: 10; 
+}
+
+
+.crosshairs-rectangular {
+    border: 3px solid transparent;
+    background: 
+        
+        linear-gradient(rgba(250, 104, 0, 0.9), rgba(250, 104, 0, 0.9)) 0 0/20px 3px no-repeat,
+        linear-gradient(rgba(250, 104, 0, 0.9), rgba(250, 104, 0, 0.9)) 0 0/3px 20px no-repeat,
+        
+        
+        linear-gradient(rgba(250, 104, 0, 0.9), rgba(250, 104, 0, 0.9)) 100% 0/20px 3px no-repeat,
+        linear-gradient(rgba(250, 104, 0, 0.9), rgba(250, 104, 0, 0.9)) 100% 0/3px 20px no-repeat,
+        
+       
+        linear-gradient(rgba(250, 104, 0, 0.9), rgba(250, 104, 0, 0.9)) 0 100%/20px 3px no-repeat,
+        linear-gradient(rgba(250, 104, 0, 0.9), rgba(250, 104, 0, 0.9)) 0 100%/3px 20px no-repeat,
+        
+        
+        linear-gradient(rgba(250, 104, 0, 0.9), rgba(250, 104, 0, 0.9)) 100% 100%/20px 3px no-repeat,
+        linear-gradient(rgba(250, 104, 0, 0.9), rgba(250, 104, 0, 0.9)) 100% 100%/3px 20px no-repeat;
+    
+    filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.7));
+}
+

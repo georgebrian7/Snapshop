@@ -51,7 +51,7 @@ html, body {
   border-radius: 16px;
   width: 100%;
   max-width: 400px;
-  max-height: 90vh; /* prevents it from exceeding screen */
+  height: 700px; /* prevents it from exceeding screen */
   overflow-y: auto;
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
   text-align: center;

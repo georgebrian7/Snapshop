@@ -15,7 +15,7 @@ from django.views.generic import CreateView
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from .llama_utils import llama_scout_poem, llama_maverick_describe
+from .llama_utils import llama_scout_poem, llama_maverick_describe 
 from django.core.paginator import Paginator
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -77,6 +77,8 @@ def maverick_describe(request):
         return Response({"detail": "image_url is required"}, status=400)
     desc = llama_maverick_describe(image_url)
     return Response({"description": desc})
+
+
 
 @login_required
 def product_search(request):
