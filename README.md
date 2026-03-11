@@ -27,8 +27,7 @@ SnapShop is an innovative image-based shopping web application that revolutioniz
 
 ### Backend
 - **Django 4.0+** - Python web framework
--
-- **Postgre SQL** - Database management system
+-**sqlite** - Database
 - **LLAMA  API** - product display
 
 ### Frontend
