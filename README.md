@@ -34,7 +34,7 @@ SnapShop is an innovative image-based shopping web application that revolutioniz
 - **HTML5** - Markup structure
 - **CSS3** - Styling and animations
 - **Bootstrap / Tailwind CSS** - Responsive design framework
-- **JavaScript** - Interactive functionality
+- **Django** - Interactive functionality
 
 ### Libraries & Tools
 - **Pillow** - Image processing and handling
