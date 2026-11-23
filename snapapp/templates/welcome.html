@@ -3,6 +3,7 @@
     <head>
         <link rel="stylesheet" href="https://bootswatch.com/5/litera/bootstrap.min.css">
         <link rel="stylesheet" href="{% static 'css/home.css' %}" type="text/css" media="all">
+        <title>Welcome Page</title>
     </head>
 <body style="background-image: url('{% static '/images/background.jpg' %}'); background-size: cover;">
     <div class="welcome-container">
@@ -16,6 +17,6 @@
     
     <a href="{% url 'signup' %}"><button type="button" class="btn btn-primary" fdprocessedid="0uwvd5" >Get Started</button></a>
         <p >Already have an account <a href="{% url 'login' %}"><button type="button" class="btn btn-light" fdprocessedid="3ecplm" >Log In</button></a></p>
-    
+    <footer> <i>Powered By:</i>  <img src="{% static '/images/llama.png' %}" alt=""> <img src="{% static '/images/ebay.png' %}" alt=""> </footer>
 </body>
  {% endblock %}
